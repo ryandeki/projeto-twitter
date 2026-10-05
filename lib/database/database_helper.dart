@@ -15,7 +15,7 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await _initDatabase();
 
   static const int _version = 1;
-  static const String _dbName = 'instagram_db.db';
+  static const String _dbName = 'twitter_db.db';
 
   Future<Database> _initDatabase() async {
     Directory documentsDir = await getApplicationCacheDirectory();
@@ -25,12 +25,37 @@ class DatabaseHelper {
 
   Future _createDb(Database db, int version) async {
     await db.execute('''
+      CREATE TABLE users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL,
+      password TEXT NOT NULL,
+      );
+    ''');
+
+    await db.execute('''
       CREATE TABLE tweets 
         (id INTEGER PRIMARY KEY AUTOINCREMENT, 
         text TEXT NOT NULL, 
         liked INTEGER NOT NULL, 
         photo BLOB, 
-        reposted INTEGER NOT NULL)''');
+        reposted INTEGER NOT NULL,
+        user_id INTEGER,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY user_id REFERENCES users(id) ON DELETE CASCADE
+        );
+    ''');
+
+    await db.execute('''
+      CREATE TABLE comments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      text TEXT NOT NULL,
+      liked INTEGER NOT NULL,
+      user_id INTEGER,
+      tweet_id INTEGER,
+      FOREIGN KEY user_id REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY tweet_id REFERENCES tweets(id) ON DELETE CASCADE,
+      );
+    ''');
   }
 }
 

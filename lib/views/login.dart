@@ -38,13 +38,25 @@ class _LoginState extends State<Login> {
                       TextInput(
                         controller: usernameController,
                         label: "Nome de usuário",
-                        invalidMessage: "Digite o nome de usuário",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Digite um nome de usuário";
+                          }
+
+                          return null;
+                        },
                         isInvisible: false,
                       ),
                       TextInput(
                         controller: passwordController,
                         label: "Senha",
-                        invalidMessage: "Digite uma senha válida",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Digite a senha";
+                          }
+
+                          return null;
+                        },
                         isInvisible: true,
                       ),
                       ElevatedButton(
@@ -94,12 +106,12 @@ class TextInput extends StatefulWidget {
     super.key,
     required this.controller,
     required this.label,
-    required this.invalidMessage,
+    required this.validator,
     required this.isInvisible,
   });
   final TextEditingController controller;
   final String label;
-  final String invalidMessage;
+  final FormFieldValidator<String> validator;
   final bool isInvisible;
 
   @override
@@ -128,12 +140,7 @@ class _TextInputState extends State<TextInput> {
         ),
       ),
       controller: widget.controller,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return widget.invalidMessage;
-        }
-        return null;
-      },
+      validator: widget.validator,
     );
   }
 }

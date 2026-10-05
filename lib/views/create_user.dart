@@ -14,6 +14,7 @@ class _CreateUserState extends State<CreateUser> {
     final formKey = GlobalKey<FormState>();
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
+    final passwordConfirmController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(title: const Text("TWITTER")),
@@ -37,19 +38,39 @@ class _CreateUserState extends State<CreateUser> {
                       TextInput(
                         controller: usernameController,
                         label: "Nome de usuário",
-                        invalidMessage: "Digite o nome de usuário",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Digite um nome de usuário";
+                          }
+
+                          return null;
+                        },
                         isInvisible: false,
                       ),
                       TextInput(
                         controller: passwordController,
                         label: "Senha",
-                        invalidMessage: "Digite uma senha válida",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Digite uma senha válida";
+                          }
+
+                          return null;
+                        },
                         isInvisible: true,
                       ),
                       TextInput(
-                        controller: passwordController,
+                        controller: passwordConfirmController,
                         label: "Confirmar senha",
-                        invalidMessage: "As senhas não são compatíveis",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Digite novamente a senha";
+                          } else if (value != passwordController.text) {
+                            return "As senhas não são compatíveis";
+                          }
+
+                          return null;
+                        },
                         isInvisible: true,
                       ),
                       ElevatedButton(
