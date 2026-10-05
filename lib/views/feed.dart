@@ -15,22 +15,7 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-        title: const Center(
-          child: Text(
-            "TWITTER",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'ClashGrotesk-Variable',
-              fontSize: 60,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+      appBar: AppBar(title: const Text("TWITTER")),
       body: ListView(
         children: [
           Center(

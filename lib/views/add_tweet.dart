@@ -50,30 +50,9 @@ class _AddTweetState extends State<AddTweet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.tweet == null
-            ? const Text(
-                "Novo Tweet",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'ClashGrotesk-Variable',
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            : const Text(
-                "Editar Tweet",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'ClashGrotesk-Variable',
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.close_rounded, color: Colors.white),
+        title: Text(
+          widget.tweet == null ? "Novo Tweet" : "Editar Tweet",
+          style: const TextStyle(fontSize: 25),
         ),
       ),
       body: Padding(
@@ -81,7 +60,6 @@ class _AddTweetState extends State<AddTweet> {
         child: Column(
           children: [
             Container(
-              height: 278,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue.shade600),
                 borderRadius: BorderRadius.circular(8),
@@ -192,9 +170,6 @@ class _AddTweetState extends State<AddTweet> {
             ),
             const SizedBox(height: 5),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade600,
-              ),
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   Tweet novoTweet = Tweet(
@@ -228,14 +203,7 @@ class _AddTweetState extends State<AddTweet> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text(
-                'Postar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'ClashGrotesk-Variable',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: const Text('Postar'),
             ),
           ],
         ),
