@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_twitter_ryan_mateo/database/database_helper.dart';
+import 'package:projeto_twitter_ryan_mateo/database/TweetDao.dart';
 import 'package:projeto_twitter_ryan_mateo/models/tweet.dart';
 import 'package:projeto_twitter_ryan_mateo/views/add_tweet.dart';
 import 'package:projeto_twitter_ryan_mateo/views/tweet_item.dart';

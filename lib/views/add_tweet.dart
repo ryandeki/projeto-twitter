@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:projeto_twitter_ryan_mateo/database/database_helper.dart';
+import 'package:projeto_twitter_ryan_mateo/database/TweetDao.dart';
 import 'package:projeto_twitter_ryan_mateo/models/tweet.dart';
 
 class AddTweet extends StatefulWidget {
@@ -203,7 +203,7 @@ class _AddTweetState extends State<AddTweet> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Postar'),
+              child: Text(widget.tweet == null ? 'Postar' : 'Salvar'),
             ),
           ],
         ),
