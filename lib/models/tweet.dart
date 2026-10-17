@@ -1,9 +1,10 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
 
 class Tweet {
   int? id;
+  int userId;
+  int? replyToTweetId;
   String text;
   bool liked;
   File? photo;
@@ -11,11 +12,15 @@ class Tweet {
 
   Tweet({
     this.id,
+    required this.userId,
+    this.replyToTweetId,
     required this.text,
     this.liked = false,
     this.photo,
     this.reposted = false,
   });
+
+  bool get isReply => replyToTweetId != null;
 
   void like() {
     liked = !liked;
@@ -37,21 +42,26 @@ class Tweet {
 
       arquivoFoto = File(tempPath)..writeAsBytesSync(bytes);
     }
+
     return Tweet(
       id: json['id'],
+      userId: json['user_id'],
+      replyToTweetId: json['reply_to_tweet_id'],
       text: json['text'],
-      liked: json['liked'] == 0 ? false : true,
+      liked: json['liked'] == 1,
       photo: arquivoFoto,
-      reposted: json['reposted'] == 0 ? false : true,
+      reposted: json['reposted'] == 1,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      if (id != null) 'id': id,
+      'user_id': userId,
+      'reply_to_tweet_id': replyToTweetId,
       'text': text,
       'liked': liked ? 1 : 0,
-      'photo': photo != null ? photo!.readAsBytesSync() : null,
+      'photo': photo?.readAsBytesSync(),
       'reposted': reposted ? 1 : 0,
     };
   }

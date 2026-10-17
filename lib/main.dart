@@ -8,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,6 +18,7 @@ class MyApp extends StatelessWidget {
           surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,
           centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.white),
           titleTextStyle: TextStyle(
             color: Colors.white,
             fontFamily: 'ClashGrotesk-Variable',
@@ -36,7 +36,10 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        colorScheme: .fromSeed(seedColor: Colors.black, surface: Colors.black),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.black,
+          surface: Colors.black,
+        ),
         useMaterial3: true,
       ),
       home: const Login(),

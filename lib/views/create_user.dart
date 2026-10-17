@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_twitter_ryan_mateo/database/user_dao.dart';
+import 'package:projeto_twitter_ryan_mateo/models/user.dart';
 import 'package:projeto_twitter_ryan_mateo/views/login.dart';
 
 class CreateUser extends StatefulWidget {
@@ -9,78 +11,145 @@ class CreateUser extends StatefulWidget {
 }
 
 class _CreateUserState extends State<CreateUser> {
+  final _formKey = GlobalKey<FormState>();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final usernameController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(title: const Text("TWITTER")),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: MediaQuery.sizeOf(context).height * 0.3,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue.shade600),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextInput(
-                        controller: usernameController,
-                        label: "Nome de usuário",
-                        invalidMessage: "Digite o nome de usuário",
-                        isInvisible: false,
-                      ),
-                      TextInput(
-                        controller: passwordController,
-                        label: "Senha",
-                        invalidMessage: "Digite uma senha válida",
-                        isInvisible: true,
-                      ),
-                      TextInput(
-                        controller: passwordController,
-                        label: "Confirmar senha",
-                        invalidMessage: "As senhas não são compatíveis",
-                        isInvisible: true,
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {}
-                        },
-                        child: const Text("Cadastrar"),
-                      ),
-                    ],
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue.shade600),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextInput(
+                          controller: _usernameController,
+                          label: "Nome de usuário",
+                          invalidMessage: "Digite o nome de usuário",
+                          isInvisible: false,
+                        ),
+                        const SizedBox(height: 10),
+                        TextInput(
+                          controller: _passwordController,
+                          label: "Senha",
+                          invalidMessage: "Digite uma senha válida",
+                          isInvisible: true,
+                        ),
+                        const SizedBox(height: 10),
+                        TextInput(
+                          controller: _confirmPasswordController,
+                          label: "Confirmar senha",
+                          invalidMessage: "Confirme a sua senha",
+                          isInvisible: true,
+                        ),
+                        const SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (_passwordController.text !=
+                                  _confirmPasswordController.text) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("As senhas não coincidem!"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final username = _usernameController.text.trim();
+                              final password = _passwordController.text;
+
+                              final existe = await UserDao.instance
+                                  .usernameExists(username);
+                              if (existe) {
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Este nome de usuário já está em uso!",
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final novoUsuario = User(
+                                username: username,
+                                password: password,
+                              );
+
+                              await UserDao.instance.insertUser(novoUsuario);
+
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Usuário cadastrado com sucesso!",
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Login(),
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text("Cadastrar"),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              "Já tem uma conta?",
-              style: TextStyle(color: Colors.grey.shade600),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: ((context) => const Login())),
-                );
-              },
-              child: Text(
-                "Entrar",
-                style: TextStyle(color: Colors.blue.shade700),
+              const SizedBox(height: 15),
+              Text(
+                "Já tem uma conta?",
+                style: TextStyle(color: Colors.grey.shade600),
               ),
-            ),
-          ],
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Login()),
+                  );
+                },
+                child: Text(
+                  "Entrar",
+                  style: TextStyle(color: Colors.blue.shade700),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
