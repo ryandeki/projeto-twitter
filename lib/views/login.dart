@@ -1,3 +1,4 @@
+import 'package:bcrypt/bcrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_twitter_ryan_mateo/database/user_dao.dart';
 import 'package:projeto_twitter_ryan_mateo/views/create_user.dart';
@@ -75,42 +76,29 @@ class _LoginState extends State<Login> {
                               final password = _passwordController.text;
 
                               final user = await UserDao.instance
-                                  .getUserByUsernameAndPassword(
-                                    username,
-                                    password,
-                                  );
+                                  .getUserByUsername(username);
 
-                              if (!mounted) return;
-
-                              if (user != null) {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Feed(user: user),
-                                  ),
-                                );
-                              } else {
+                              if (user == null ||
+                                  !BCrypt.checkpw(password, user.password)) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text("Cadastro não realizado"),
+                                    content: Text(
+                                      "Usuário ou senha incorretos",
+                                    ),
                                     backgroundColor: Colors.red,
                                     duration: Duration(seconds: 2),
                                   ),
                                 );
-
-                                await Future.delayed(
-                                  const Duration(seconds: 2),
-                                );
-
-                                if (!mounted) return;
-
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const CreateUser(),
-                                  ),
-                                );
                               }
+
+                              if (!mounted) return;
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Feed(user: user!),
+                                ),
+                              );
                             }
                           },
                           child: const Text("Entrar"),

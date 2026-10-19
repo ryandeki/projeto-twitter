@@ -1,3 +1,4 @@
+import 'package:bcrypt/bcrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_twitter_ryan_mateo/database/user_dao.dart';
 import 'package:projeto_twitter_ryan_mateo/models/user.dart';
@@ -92,7 +93,10 @@ class _CreateUserState extends State<CreateUser> {
                               }
 
                               final username = _usernameController.text.trim();
-                              final password = _passwordController.text;
+                              final hashedPassword = BCrypt.hashpw(
+                                _passwordController.text,
+                                BCrypt.gensalt(),
+                              );
 
                               final existe = await UserDao.instance
                                   .usernameExists(username);
@@ -111,7 +115,7 @@ class _CreateUserState extends State<CreateUser> {
 
                               final novoUsuario = User(
                                 username: username,
-                                password: password,
+                                password: hashedPassword,
                               );
 
                               await UserDao.instance.insertUser(novoUsuario);

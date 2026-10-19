@@ -34,6 +34,17 @@ class UserDao {
     }
   }
 
+  Future<User?> getUserByUsername(String username) async {
+    Database db = await DatabaseHelper.instance.database;
+    final map = await db.query(
+      'users',
+      where: 'username = ?',
+      whereArgs: [username],
+    );
+    final user = map.isNotEmpty ? User.fromMap(map.first) : null;
+    return user;
+  }
+
   Future<User?> getUserById(int id) async {
     Database db = await DatabaseHelper.instance.database;
     final maps = await db.query('users', where: 'id = ?', whereArgs: [id]);

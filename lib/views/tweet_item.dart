@@ -241,14 +241,14 @@ class _TweetItemState extends State<TweetItem> {
                             onPressed: () async {
                               if (widget.currentUser.id != null &&
                                   widget.tweet.id != null) {
+                                setState(() {
+                                  widget.tweet.repost();
+                                });
                                 await InteracaoDao.instance.toggleRepost(
                                   widget.currentUser.id!,
                                   widget.tweet.id!,
                                   widget.tweet.reposted,
                                 );
-                                setState(() {
-                                  widget.tweet.repost();
-                                });
                               }
                             },
                             icon: Icon(
