@@ -32,6 +32,16 @@ class TweetDao {
         : [];
   }
 
+  Future<Tweet?> getTweetById(int id) async {
+    Database db = await DatabaseHelper.instance.database;
+    final maps = await db.query('tweets', where: 'id = ?', whereArgs: [id]);
+
+    if (maps.isNotEmpty) {
+      return Tweet.fromMap(maps.first);
+    }
+    return null;
+  }
+
   Future<int> add(Tweet newTweet) async {
     Database db = await DatabaseHelper.instance.database;
     return await db.insert('tweets', newTweet.toMap());

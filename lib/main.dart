@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_twitter_ryan_mateo/services/notification_service.dart';
 import 'package:projeto_twitter_ryan_mateo/views/login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.instance.init();
   runApp(const MyApp());
 }
 

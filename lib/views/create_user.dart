@@ -33,6 +33,16 @@ class _CreateUserState extends State<CreateUser> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text(
+                "Cadastre-se",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'ClashGrotesk-Variable',
+                ),
+              ),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(

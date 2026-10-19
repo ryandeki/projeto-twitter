@@ -31,6 +31,16 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text(
+                "Faça o login",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'ClashGrotesk-Variable',
+                ),
+              ),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -73,7 +83,6 @@ class _LoginState extends State<Login> {
                               if (!mounted) return;
 
                               if (user != null) {
-                                // Usuário encontrado: entra no Feed
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -81,7 +90,6 @@ class _LoginState extends State<Login> {
                                   ),
                                 );
                               } else {
-                                // Usuário não encontrado no SQLite: exibe a mensagem de erro
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Cadastro não realizado"),
@@ -90,14 +98,12 @@ class _LoginState extends State<Login> {
                                   ),
                                 );
 
-                                // Aguarda a exibição da mensagem antes de redirecionar para a tela de cadastro
                                 await Future.delayed(
                                   const Duration(seconds: 2),
                                 );
 
                                 if (!mounted) return;
 
-                                // Redireciona para a tela de cadastro de usuário
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
